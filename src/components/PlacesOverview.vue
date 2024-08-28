@@ -4,10 +4,10 @@ import places_json from '../assets/places.json'
 const places = places_json
 // Use index as sequence number
 for (let idx in places) {
-  places[idx]['index'] = idx
+  places[idx]['seq_no'] = idx
 }
 const fields = [
-  'index',
+  'seq_no',
   {key: 'name', sortable: true},
   {key: 'location', sortable: true, label: '[Latitude, Longitude]'},
   {key: 'rating', sortable: true}
@@ -26,8 +26,8 @@ const get_link = (location) => {
 
 <template>
   <div class="content">
-    <b-table id="places"
-             hover caption-top
+    <b-table id="places-table"
+             outlined hover caption-top
              caption="Local markets in Sri Lanka"
              :striped=true
              :small=true
@@ -36,7 +36,7 @@ const get_link = (location) => {
              :items=places
              :sort-by=sortBy
              :sort-desc=sortDesc
-             primary-key="index"
+             primary-key="seq_no"
     >
       <template #cell(location)="data">
         <a :href="get_link(data.item.location)" target="_blank" title="Open in Google Maps">
