@@ -1,34 +1,45 @@
 <script setup>
-import places_json from '../assets/places.json'
+import placesJson from '@/assets/places.json'
+import reviewsJson from '@/assets/reviews.json'
+import PlaceDetails from "@/components/PlaceDetails.vue";
 
 /*** Table data ***/
-const places = places_json
+const places = placesJson
 // Use index as sequence number
 for (let idx in places) {
   places[idx]['seq_no'] = idx
+  places[idx]['_showDetails'] = false
 }
+
+const reviews = reviewsJson
+console.log(reviews)
 
 /*** Table properties ***/
 const fields = [
   'seq_no',
+  'n_photos',
+  'n_reviews',
   {key: 'name', sortable: true},
   {key: 'location', sortable: true, label: '[Latitude, Longitude]'},
   {key: 'rating', sortable: true}
 ]
 
-// const sortBy = 'rating'
-// const sortDesc = true
 // TODO Pagination does not affect table
 const perPage = 20
 const currentPage = 1
 
 
-const map_link_template = 'https://maps.google.com/maps?q=LAT,LON&z=14'
+const MAP_LINK_TEMPLATE = 'https://maps.google.com/maps?q=LAT,LON&z=14'
 
-const get_link = (location) => {
-  return map_link_template
+const getLink = (location) => {
+  // TODO Use place ID instead of coordinates
+  return MAP_LINK_TEMPLATE
       .replace('LAT', location[0])
-      .replace('LON', location[1])
+      .replace('LON', location[1]);
+}
+
+const showPlaceDetails = (item) => {
+  item._showDetails = !item._showDetails;
 }
 </script>
 
@@ -49,14 +60,17 @@ const get_link = (location) => {
              :current-page=currentPage
              :fields=fields
              :items=places
-             :sort-by=sortBy
-             :sort-desc=sortDesc
              primary-key="seq_no"
+             @row-dblclicked="showPlaceDetails"
     >
       <template #cell(location)="data">
-        <a :href="get_link(data.item.location)" target="_blank" title="Open in Google Maps">
+        <a :href="getLink(data.item.location)" target="_blank" title="Open in Google Maps">
           ({{ data.item.location[0].toFixed(4) }}, {{ data.item.location[1].toFixed(4) }})
         </a>
+      </template>
+
+      <template #row-details="row">
+        <PlaceDetails :placeData="row" :place-reviews="Object.values(reviews[row.index])"/>
       </template>
     </b-table>
   </div>
