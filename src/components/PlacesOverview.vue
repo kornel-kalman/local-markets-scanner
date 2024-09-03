@@ -20,7 +20,6 @@ const fields = [
   'n_photos',
   'n_reviews',
   {key: 'name', sortable: true},
-  {key: 'location', sortable: true, label: '[Latitude, Longitude]'},
   {key: 'rating', sortable: true}
 ]
 
@@ -29,14 +28,9 @@ const perPage = 20
 const currentPage = 1
 
 
-const MAP_LINK_TEMPLATE = 'https://maps.google.com/maps?q=LAT,LON&z=14'
+const MAP_LINK_TEMPLATE = 'https://www.google.com/maps/place/?q=place_id:PLACE_ID'
 
-const getLink = (location) => {
-  // TODO Use place ID instead of coordinates
-  return MAP_LINK_TEMPLATE
-      .replace('LAT', location[0])
-      .replace('LON', location[1]);
-}
+const getLink = (place_id) => MAP_LINK_TEMPLATE.replace('PLACE_ID', place_id)
 
 const showPlaceDetails = (item) => {
   item._showDetails = !item._showDetails;
@@ -63,9 +57,9 @@ const showPlaceDetails = (item) => {
              primary-key="seq_no"
              @row-dblclicked="showPlaceDetails"
     >
-      <template #cell(location)="data">
-        <a :href="getLink(data.item.location)" target="_blank" title="Open in Google Maps">
-          ({{ data.item.location[0].toFixed(4) }}, {{ data.item.location[1].toFixed(4) }})
+      <template #cell(name)="data">
+        <a :href="getLink(data.item.place_id)" target="_blank" title="Open in Google Maps">
+          {{ data.item.name }}
         </a>
       </template>
 
