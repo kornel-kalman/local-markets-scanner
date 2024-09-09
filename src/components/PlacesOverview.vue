@@ -16,9 +16,9 @@ console.log(reviews)
 
 /*** Table properties ***/
 const fields = [
-  'seq_no',
-  'n_photos',
-  'n_reviews',
+  {key: 'seq_no', sortable: true},
+  {key: 'n_photos', sortable: true},
+  {key: 'n_reviews', sortable: true},
   {key: 'name', sortable: true},
   {key: 'rating', sortable: true}
 ]

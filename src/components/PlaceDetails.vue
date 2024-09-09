@@ -12,7 +12,11 @@ const props = defineProps({
 })
 const photosFolder = 'assets/_photos/' + props.placeData.item.seq_no;
 
-const reviewFields = ['rating', 'relative_time_description', 'text'/*, 'time'*/]
+const reviewFields = [
+  'rating',
+  {key: 'relative_time_description', label: 'Time'},
+  'text'
+]
 
 </script>
 
