@@ -61,10 +61,6 @@ const reviewFields = [
 </template>
 
 <style scoped>
-#photos_row {
-  display: none;
-}
-
 img {
   margin: 2px;
 }
