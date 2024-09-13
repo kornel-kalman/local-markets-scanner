@@ -1,18 +1,55 @@
 <script setup>
-import placesJson from '@/assets/places.json'
-import reviewsJson from '@/assets/reviews.json'
 import PlaceDetails from "@/components/PlaceDetails.vue";
+import axios from "axios";
+import {onMounted, ref} from "vue";
+import reviewsJson from '@/assets/reviews.json'
+
 
 /*** Table data ***/
-const places = placesJson
-// Use index as sequence number
-for (let idx in places) {
-  places[idx]['seq_no'] = idx
-  places[idx]['_showDetails'] = false
-}
+const places = ref([]);
+const dataAvailable = ref(false)
+
+onMounted(() => {
+  axios
+      .get('http://localhost:5000/places', {
+        headers: {"Access-Control-Allow-Origin": "*"}
+      })
+      .then((response) => {
+        console.log(response)
+        let items = response.data;
+        // Generate synthetic fields
+        for (let idx in items) {
+          items[idx]['seq_no'] = idx
+          items[idx]['_showDetails'] = false
+        }
+        // callback(items);
+        places.value = items;
+        // return items || [];
+        dataAvailable.value = true;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+})
+
+/*const placesProvider = (ctx/!*, callback*!/) => {
+  axios
+      .get(ctx.apiUrl, {
+        headers: {"Access-Control-Allow-Origin": "*"}
+      })
+      .then((response) => {
+        console.log(response)
+        let items = response.data;
+        // callback(items);
+        // places.value = items;
+        return items || [];
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+}*/
 
 const reviews = reviewsJson
-console.log(reviews)
 
 /*** Table properties ***/
 const fields = [
@@ -21,11 +58,11 @@ const fields = [
   {key: 'n_reviews', sortable: true},
   {key: 'name', sortable: true},
   {key: 'rating', sortable: true}
-]
+];
 
 // TODO Pagination does not affect table
-const perPage = 20
-const currentPage = 1
+const perPage = 20;
+const currentPage = 1;
 
 
 const MAP_LINK_TEMPLATE = 'https://www.google.com/maps/place/?q=place_id:PLACE_ID'
@@ -38,7 +75,7 @@ const showPlaceDetails = (item) => {
 </script>
 
 <template>
-  <div class="content">
+  <div class="content" v-if="dataAvailable">
     <b-pagination
         v-model="currentPage"
         :total-rows="places.length"
@@ -50,6 +87,7 @@ const showPlaceDetails = (item) => {
              caption="Local markets in Sri Lanka"
              :striped=true
              :small=true
+             api-url="http://localhost:5000/places"
              :per-page=perPage
              :current-page=currentPage
              :fields=fields
