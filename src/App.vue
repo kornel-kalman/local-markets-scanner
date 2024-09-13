@@ -1,15 +1,11 @@
 <template>
-  <PlacesOverview/>
+  <router-view></router-view>
 </template>
 
 <script>
-import PlacesOverview from './components/PlacesOverview.vue'
 
 export default {
-  name: 'App',
-  components: {
-    PlacesOverview
-  }
+  name: 'App'
 }
 </script>
 
