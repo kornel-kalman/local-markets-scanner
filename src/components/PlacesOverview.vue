@@ -11,20 +11,14 @@ const dataAvailable = ref(false)
 
 onMounted(() => {
   axios
-      .get('http://localhost:5000/places', {
-        headers: {"Access-Control-Allow-Origin": "*"}
-      })
+      .get('http://localhost:5000/places')
       .then((response) => {
-        console.log(response)
         let items = response.data;
         // Generate synthetic fields
         for (let idx in items) {
-          items[idx]['seq_no'] = idx
           items[idx]['_showDetails'] = false
         }
-        // callback(items);
         places.value = items;
-        // return items || [];
         dataAvailable.value = true;
       })
       .catch((error) => {
@@ -32,28 +26,11 @@ onMounted(() => {
       });
 })
 
-/*const placesProvider = (ctx/!*, callback*!/) => {
-  axios
-      .get(ctx.apiUrl, {
-        headers: {"Access-Control-Allow-Origin": "*"}
-      })
-      .then((response) => {
-        console.log(response)
-        let items = response.data;
-        // callback(items);
-        // places.value = items;
-        return items || [];
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-}*/
-
 const reviews = reviewsJson
 
 /*** Table properties ***/
 const fields = [
-  {key: 'seq_no', sortable: true},
+  {key: 'id', sortable: true},
   {key: 'n_photos', sortable: true},
   {key: 'n_reviews', sortable: true},
   {key: 'name', sortable: true},
@@ -92,7 +69,7 @@ const showPlaceDetails = (item) => {
              :current-page=currentPage
              :fields=fields
              :items=places
-             primary-key="seq_no"
+             primary-key="id"
              @row-dblclicked="showPlaceDetails"
     >
       <template #cell(name)="data">
