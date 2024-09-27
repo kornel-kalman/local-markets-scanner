@@ -1,21 +1,22 @@
 <script setup>
 import PlaceDetails from "@/components/PlaceDetails.vue";
 import axios from "axios";
-import {onBeforeMount, ref} from "vue";
+import {onMounted, ref} from "vue";
+import reviewsJson from '@/assets/reviews.json'
 
 
 /*** Table data ***/
 const places = ref([]);
-const displayedPlaces = ref([]);
-const dataAvailable = ref(false);
+const dataAvailable = ref(false)
 
-onBeforeMount(() => {
+onMounted(() => {
   axios
       .get('http://localhost:5000/places')
       .then((response) => {
         let items = response.data;
         // Generate synthetic fields
         for (let idx in items) {
+          items[idx]['seq_no'] = idx
           items[idx]['_showDetails'] = false
         }
         places.value = items;
@@ -24,65 +25,31 @@ onBeforeMount(() => {
       .catch((error) => {
         console.error(error);
       });
-});
+})
+
+const reviews = reviewsJson
 
 /*** Table properties ***/
 const fields = [
-  {key: 'id', sortable: true},
+  {key: 'seq_no', sortable: true},
   {key: 'n_photos', sortable: true},
   {key: 'n_reviews', sortable: true},
   {key: 'name', sortable: true},
   {key: 'rating', sortable: true}
 ];
 
+// TODO Pagination does not affect table
 const perPage = 20;
-const currentPage = ref(1);
+const currentPage = 1;
 
 
-const MAP_LINK_TEMPLATE = 'https://www.google.com/maps/place/?q=place_id:PLACE_ID';
+const MAP_LINK_TEMPLATE = 'https://www.google.com/maps/place/?q=place_id:PLACE_ID'
 
-function getLink(place_id) {
-  return MAP_LINK_TEMPLATE.replace('PLACE_ID', place_id)
+const getLink = (place_id) => MAP_LINK_TEMPLATE.replace('PLACE_ID', place_id)
+
+const showPlaceDetails = (item) => {
+  item._showDetails = !item._showDetails;
 }
-
-function rowClass(item, type) {
-  if (!item || type !== 'row') return;
-  else if (item.is_market === true) return 'table-success';
-  else if (item.is_market === false) return 'table-danger';
-  return '';
-}
-
-function togglePlaceDetails(item, index, event) {
-  event.preventDefault();
-  let newState = !item._showDetails;
-  for (const place of places.value)
-    if (place._showDetails)
-      place._showDetails = false;
-
-  item._showDetails = newState;
-}
-
-function updatePlaceData(placeId, placeData, recordProcessed) {
-  // Update place record
-  let idx = places.value.findIndex((placeObj) => placeObj.id === placeId);
-  for (let prop in placeData) {
-    places.value[idx][prop] = placeData[prop];
-  }
-
-  if (recordProcessed) {
-    // Hide details of current record
-    idx = displayedPlaces.value.findIndex((placeObj) => placeObj.id === placeId);
-    displayedPlaces.value[idx]._showDetails = false;
-    // Show details of next displayed & unmarked record
-    for (let i = idx; i < displayedPlaces.value.length - 1; i++) {
-      if (displayedPlaces.value[i + 1].is_market === null) {
-        displayedPlaces.value[i + 1]._showDetails = true;
-        break;
-      }
-    }
-  }
-}
-
 </script>
 
 <template>
@@ -94,10 +61,6 @@ function updatePlaceData(placeId, placeData, recordProcessed) {
         aria-controls="places-table"
     />
     <b-table id="places-table"
-             v-model="displayedPlaces"
-             :fields=fields
-             :items=places
-             primary-key="id"
              outlined hover caption-top
              caption="Local markets in Sri Lanka"
              :striped=true
@@ -105,20 +68,19 @@ function updatePlaceData(placeId, placeData, recordProcessed) {
              api-url="http://localhost:5000/places"
              :per-page=perPage
              :current-page=currentPage
-             :tbody-tr-class="rowClass"
-             @row-contextmenu="togglePlaceDetails"
+             :fields=fields
+             :items=places
+             primary-key="seq_no"
+             @row-dblclicked="showPlaceDetails"
     >
-      <template #cell(name)="row">
-        <a :href="getLink(row.item.place_id)" target="_blank" title="Open in Google Maps">
-          {{ row.item.name }}
+      <template #cell(name)="data">
+        <a :href="getLink(data.item.place_id)" target="_blank" title="Open in Google Maps">
+          {{ data.item.name }}
         </a>
       </template>
 
       <template #row-details="row">
-        <PlaceDetails
-            :placeData="row"
-            @place:update="(placeId, placeData, recordProcessed)=>updatePlaceData(placeId, placeData, recordProcessed)"
-        />
+        <PlaceDetails :placeData="row" :place-reviews="Object.values(reviews[row.index])"/>
       </template>
     </b-table>
   </div>
