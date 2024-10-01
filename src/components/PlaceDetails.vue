@@ -14,7 +14,7 @@ const props = defineProps({
     required: false
   }
 })
-const photosFolder = 'assets/_photos/' + props.placeData.item.seq_no;
+const photosFolder = 'assets/_photos/' + props.placeData.item.id;
 
 const reviewFields = [
   'rating',
@@ -23,8 +23,8 @@ const reviewFields = [
 ]
 
 
-const saveMarketStatus = function (place_id, marketStatus) {
-  axios.put('http://localhost:5000/places/' + place_id, {
+const saveMarketStatus = function (id, marketStatus) {
+  axios.put('http://localhost:5000/places/' + id, {
     'is_market': marketStatus
   }).then((response) => {
     current_market_status.value = response.data?.is_market;
