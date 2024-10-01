@@ -43,6 +43,14 @@ const MAP_LINK_TEMPLATE = 'https://www.google.com/maps/place/?q=place_id:PLACE_I
 
 const getLink = (place_id) => MAP_LINK_TEMPLATE.replace('PLACE_ID', place_id)
 
+const rowClass = (item, type) => {
+  console.log(item.is_market);
+  if (!item || type !== 'row') return;
+  else if (item.is_market === true) return 'table-success';
+  else if (item.is_market === false) return 'table-danger';
+  return '';
+}
+
 const showPlaceDetails = (item, index, event) => {
   item._showDetails = !item._showDetails;
   event.preventDefault();
@@ -68,6 +76,7 @@ const showPlaceDetails = (item, index, event) => {
              :current-page=currentPage
              :fields=fields
              :items=places
+             :tbody-tr-class="rowClass"
              primary-key="id"
              @row-contextmenu="showPlaceDetails"
     >

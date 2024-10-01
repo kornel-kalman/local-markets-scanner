@@ -10,6 +10,7 @@ const props = defineProps({
     required: true
   }
 })
+
 const photosFolder = 'assets/_photos/' + props.placeData.item.id;
 
 const reviewFields = [
@@ -20,6 +21,14 @@ const reviewFields = [
 const reviews = ref([])
 const has_reviews = computed(() => {
   return reviews.value.length > 0
+})
+
+const currentMarketStatus = ref(props.placeData.item.is_market)
+
+const cardStyleClass = computed(() => {
+  if (currentMarketStatus.value === true) return 'card-market-yes';
+  else if (currentMarketStatus.value === false) return 'card-market-no';
+  return '';
 })
 
 onBeforeMount(() => {
@@ -36,17 +45,15 @@ const saveMarketStatus = function (id, marketStatus) {
   axios.put('http://localhost:5000/places/' + id, {
     'is_market': marketStatus
   }).then((response) => {
-    current_market_status.value = response.data?.is_market;
+    currentMarketStatus.value = response.data?.is_market;
   })
       .catch(console.error);
 }
 
-const current_market_status = ref(props.placeData.item.is_market)
-
 </script>
 
 <template>
-  <b-card>
+  <b-card :class="cardStyleClass">
     <b-row>
       <b-col sm="10">
         <b-row class="mb-2">
@@ -66,12 +73,12 @@ const current_market_status = ref(props.placeData.item.is_market)
         <h4>Is a market?</h4>
         <div>
           <VariantButton class="btn-market-yes"
-                         :active="current_market_status === true"
+                         :active="currentMarketStatus === true"
                          variant-class="success"
                          text="YES"
                          @clicked="saveMarketStatus(placeData.item.id,true)"/>
           <VariantButton class="btn-market-no"
-                         :active="current_market_status === false"
+                         :active="currentMarketStatus === false"
                          variant-class="danger"
                          text="NO"
                          @clicked="saveMarketStatus(placeData.item.id,false)"/>
@@ -103,5 +110,13 @@ const current_market_status = ref(props.placeData.item.is_market)
 <style scoped>
 img {
   margin: 2px;
+}
+
+.card-market-yes {
+  background-color: rgba(66, 185, 131, 0.25);
+}
+
+.card-market-no {
+  background-color: rgba(240, 120, 120, 0.25);
 }
 </style>
