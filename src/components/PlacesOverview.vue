@@ -46,8 +46,10 @@ const MAP_LINK_TEMPLATE = 'https://www.google.com/maps/place/?q=place_id:PLACE_I
 
 const getLink = (place_id) => MAP_LINK_TEMPLATE.replace('PLACE_ID', place_id)
 
-const showPlaceDetails = (item) => {
+const showPlaceDetails = (item, index, event) => {
   item._showDetails = !item._showDetails;
+  event.preventDefault();
+
 }
 </script>
 
@@ -70,11 +72,11 @@ const showPlaceDetails = (item) => {
              :fields=fields
              :items=places
              primary-key="id"
-             @row-dblclicked="showPlaceDetails"
+             @row-contextmenu="showPlaceDetails"
     >
-      <template #cell(name)="data">
-        <a :href="getLink(data.item.place_id)" target="_blank" title="Open in Google Maps">
-          {{ data.item.name }}
+      <template #cell(name)="row">
+        <a :href="getLink(row.item.place_id)" target="_blank" title="Open in Google Maps">
+          {{ row.item.name }}
         </a>
       </template>
 
