@@ -1,15 +1,14 @@
 <script setup>
 import PlaceDetails from "@/components/PlaceDetails.vue";
 import axios from "axios";
-import {onMounted, ref} from "vue";
-import reviewsJson from '@/assets/reviews.json'
+import {onBeforeMount, ref} from "vue";
 
 
 /*** Table data ***/
 const places = ref([]);
 const dataAvailable = ref(false)
 
-onMounted(() => {
+onBeforeMount(() => {
   axios
       .get('http://localhost:5000/places')
       .then((response) => {
@@ -25,8 +24,6 @@ onMounted(() => {
         console.error(error);
       });
 })
-
-const reviews = reviewsJson
 
 /*** Table properties ***/
 const fields = [
@@ -81,7 +78,7 @@ const showPlaceDetails = (item, index, event) => {
       </template>
 
       <template #row-details="row">
-        <PlaceDetails :placeData="row" :place-reviews="Object.values(reviews[row.index])"/>
+        <PlaceDetails :placeData="row"/>
       </template>
     </b-table>
   </div>

@@ -1,17 +1,13 @@
 <script setup>
 /* eslint no-undef: off */
 import axios from "axios";
-import {defineProps, ref} from "vue";
+import {computed, defineProps, onBeforeMount, ref} from "vue";
 import VariantButton from "@/components/elements/VariantButton.vue";
 
 const props = defineProps({
   placeData: {
     type: Object,
     required: true
-  },
-  placeReviews: {
-    type: Object,
-    required: false
   }
 })
 const photosFolder = 'assets/_photos/' + props.placeData.item.id;
@@ -21,6 +17,19 @@ const reviewFields = [
   {key: 'relative_time_description', label: 'Time'},
   'text'
 ]
+const reviews = ref([])
+const has_reviews = computed(() => {
+  return reviews.value.length > 0
+})
+
+onBeforeMount(() => {
+  axios
+      .get('http://localhost:5000/places/' + props.placeData.item.id + '/reviews')
+      .then((response) => {
+        reviews.value = response.data;
+      })
+      .catch(console.error);
+})
 
 
 const saveMarketStatus = function (id, marketStatus) {
@@ -71,7 +80,7 @@ const current_market_status = ref(props.placeData.item.is_market)
     </b-row>
 
     <b-button v-b-toggle.collapse-photos class="m-1">Show photos</b-button>
-    <b-button v-b-toggle.collapse-reviews class="m-1">Show reviews</b-button>
+    <b-button v-b-toggle.collapse-reviews class="m-1" v-if="has_reviews">Show reviews</b-button>
 
     <b-collapse id="collapse-photos">
       <template v-for="i in placeData.item.n_photos" :key="i">
@@ -83,7 +92,7 @@ const current_market_status = ref(props.placeData.item.is_market)
       <b-table
           hover caption-top
           caption="5 most relevant reviews"
-          :items="placeReviews"
+          :items="reviews"
           :fields="reviewFields"
       />
     </b-collapse>
