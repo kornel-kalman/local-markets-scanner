@@ -22,6 +22,9 @@ const reviews = ref([])
 
 const currentMarketStatus = ref(props.placeData.item.is_market)
 
+const phtosVisible = ref(false)
+const reviewsVisible = ref(false)
+
 const cardStyleClass = computed(() => {
   if (currentMarketStatus.value === true) return 'card-market-yes';
   else if (currentMarketStatus.value === false) return 'card-market-no';
@@ -88,13 +91,12 @@ const saveMarketStatus = function (id, marketStatus) {
     <b-button v-b-toggle.collapse-photos class="m-1" v-if="placeData.item.n_photos > 0">Show photos</b-button>
     <b-button v-b-toggle.collapse-reviews class="m-1" v-if="placeData.item.n_reviews > 0">Show reviews</b-button>
 
-    <b-collapse id="collapse-photos">
+    <b-collapse id="collapse-photos" v-model="phtosVisible" @show="reviewsVisible=false">
       <template v-for="i in placeData.item.n_photos" :key="i">
         <b-img :src="`${photosFolder}/${i-1}.jpg`" width="360" height="270"/>
       </template>
     </b-collapse>
-
-    <b-collapse id="collapse-reviews">
+    <b-collapse id="collapse-reviews" v-model="reviewsVisible" @show="phtosVisible=false">
       <b-table
           hover caption-top
           caption="5 most relevant reviews"
