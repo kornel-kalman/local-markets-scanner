@@ -34,9 +34,8 @@ const fields = [
   {key: 'rating', sortable: true}
 ];
 
-// TODO Pagination does not affect table
 const perPage = 20;
-const currentPage = 1;
+const currentPage = ref(1);
 
 
 const MAP_LINK_TEMPLATE = 'https://www.google.com/maps/place/?q=place_id:PLACE_ID'
