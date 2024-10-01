@@ -19,9 +19,6 @@ const reviewFields = [
   'text'
 ]
 const reviews = ref([])
-const has_reviews = computed(() => {
-  return reviews.value.length > 0
-})
 
 const currentMarketStatus = ref(props.placeData.item.is_market)
 
@@ -42,11 +39,13 @@ onBeforeMount(() => {
 
 
 const saveMarketStatus = function (id, marketStatus) {
-  axios.put('http://localhost:5000/places/' + id, {
-    'is_market': marketStatus
-  }).then((response) => {
-    currentMarketStatus.value = response.data?.is_market;
-  })
+  axios
+      .put('http://localhost:5000/places/' + id, {
+        'is_market': marketStatus
+      })
+      .then((response) => {
+        currentMarketStatus.value = response.data?.is_market;
+      })
       .catch(console.error);
 }
 
@@ -86,8 +85,8 @@ const saveMarketStatus = function (id, marketStatus) {
       </b-col>
     </b-row>
 
-    <b-button v-b-toggle.collapse-photos class="m-1">Show photos</b-button>
-    <b-button v-b-toggle.collapse-reviews class="m-1" v-if="has_reviews">Show reviews</b-button>
+    <b-button v-b-toggle.collapse-photos class="m-1" v-if="placeData.item.n_photos > 0">Show photos</b-button>
+    <b-button v-b-toggle.collapse-reviews class="m-1" v-if="placeData.item.n_reviews > 0">Show reviews</b-button>
 
     <b-collapse id="collapse-photos">
       <template v-for="i in placeData.item.n_photos" :key="i">
