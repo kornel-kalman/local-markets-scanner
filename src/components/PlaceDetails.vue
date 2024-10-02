@@ -72,8 +72,11 @@ const saveMarketStatus = function (id, marketStatus) {
         </b-row>
         <b-row align-h="center">
           <b-col cols="4">
-            <b-button v-b-toggle.collapse-photos class="m-1" v-if="placeData.item.n_photos > 0">Show photos</b-button>
-            <b-button v-b-toggle.collapse-reviews class="m-1" v-if="placeData.item.n_reviews > 0">Show reviews
+            <b-button v-b-toggle.collapse-photos class="m-1" v-if="placeData.item.n_photos > 0">
+              <span class="when-closed">Show</span><span class="when-open">Hide</span> photos
+            </b-button>
+            <b-button v-b-toggle.collapse-reviews class="m-1" v-if="placeData.item.n_reviews > 0">
+              <span class="when-closed">Show</span><span class="when-open">Hide</span> reviews
             </b-button>
           </b-col>
         </b-row>
@@ -125,6 +128,11 @@ img {
 
 .card-market-no {
   background-color: rgba(240, 120, 120, 0.25);
+}
+
+.collapsed > .when-open,
+.not-collapsed > .when-closed {
+  display: none;
 }
 
 div.fix-box {
