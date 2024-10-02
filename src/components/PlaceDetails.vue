@@ -70,41 +70,47 @@ const saveMarketStatus = function (id, marketStatus) {
           <b-col cols="3" class="text-sm-right"><b>Rating:</b></b-col>
           <b-col cols="6">{{ placeData.item.rating }} ({{ placeData.item.n_user_rating }})</b-col>
         </b-row>
+        <b-row align-h="center">
+          <b-col cols="4">
+            <b-button v-b-toggle.collapse-photos class="m-1" v-if="placeData.item.n_photos > 0">Show photos</b-button>
+            <b-button v-b-toggle.collapse-reviews class="m-1" v-if="placeData.item.n_reviews > 0">Show reviews
+            </b-button>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-collapse id="collapse-photos" v-model="phtosVisible" @show="reviewsVisible=false">
+            <template v-for="i in placeData.item.n_photos" :key="i">
+              <b-img :src="`${photosFolder}/${i-1}.jpg`" width="360" height="270"/>
+            </template>
+          </b-collapse>
+          <b-collapse id="collapse-reviews" v-model="reviewsVisible" @show="phtosVisible=false">
+            <b-table
+                hover caption-top
+                caption="5 most relevant reviews"
+                :items="reviews"
+                :fields="reviewFields"
+            />
+          </b-collapse>
+        </b-row>
       </b-col>
       <b-col sm="2">
-        <h4>Is a market?</h4>
-        <div>
-          <VariantButton class="btn-market-yes"
-                         :active="currentMarketStatus === true"
-                         variant-class="success"
-                         text="YES"
-                         @clicked="saveMarketStatus(placeData.item.id,true)"/>
-          <VariantButton class="btn-market-no"
-                         :active="currentMarketStatus === false"
-                         variant-class="danger"
-                         text="NO"
-                         @clicked="saveMarketStatus(placeData.item.id,false)"/>
+        <div class="fix-box">
+          <h4>Is a market?</h4>
+          <div>
+            <VariantButton class="btn-market-yes"
+                           :active="currentMarketStatus === true"
+                           variant-class="success"
+                           text="YES"
+                           @clicked="saveMarketStatus(placeData.item.id,true)"/>
+            <VariantButton class="btn-market-no"
+                           :active="currentMarketStatus === false"
+                           variant-class="danger"
+                           text="NO"
+                           @clicked="saveMarketStatus(placeData.item.id,false)"/>
+          </div>
         </div>
       </b-col>
     </b-row>
-
-    <b-button v-b-toggle.collapse-photos class="m-1" v-if="placeData.item.n_photos > 0">Show photos</b-button>
-    <b-button v-b-toggle.collapse-reviews class="m-1" v-if="placeData.item.n_reviews > 0">Show reviews</b-button>
-
-    <b-collapse id="collapse-photos" v-model="phtosVisible" @show="reviewsVisible=false">
-      <template v-for="i in placeData.item.n_photos" :key="i">
-        <b-img :src="`${photosFolder}/${i-1}.jpg`" width="360" height="270"/>
-      </template>
-    </b-collapse>
-    <b-collapse id="collapse-reviews" v-model="reviewsVisible" @show="phtosVisible=false">
-      <b-table
-          hover caption-top
-          caption="5 most relevant reviews"
-          :items="reviews"
-          :fields="reviewFields"
-      />
-    </b-collapse>
-
   </b-card>
 </template>
 
@@ -119,5 +125,10 @@ img {
 
 .card-market-no {
   background-color: rgba(240, 120, 120, 0.25);
+}
+
+div.fix-box {
+  position: sticky;
+  top: 20px;
 }
 </style>
