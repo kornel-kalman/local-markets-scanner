@@ -3,7 +3,7 @@ import {defineEmits, defineProps} from "vue";
 
 /*const props = */
 defineProps({
-  active: {
+  selected: {
     type: Boolean,
     required: false
   },
@@ -21,7 +21,7 @@ defineEmits(['clicked'])
 </script>
 
 <template>
-  <b-button :variant="(active ? '' : 'outline-') + variantClass"
+  <b-button :variant="(selected ? '' : 'outline-') + variantClass"
             @click="$emit('clicked')">
     {{ text }}
   </b-button>

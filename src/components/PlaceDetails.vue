@@ -101,12 +101,14 @@ const saveMarketStatus = function (id, marketStatus) {
           <h4>Is a market?</h4>
           <div>
             <VariantButton class="btn-market-yes"
-                           :active="currentMarketStatus === true"
+                           :selected="currentMarketStatus === true"
+                           :disabled="currentMarketStatus === true"
                            variant-class="success"
                            text="YES"
                            @clicked="saveMarketStatus(placeData.item.id,true)"/>
             <VariantButton class="btn-market-no"
-                           :active="currentMarketStatus === false"
+                           :selected="currentMarketStatus === false"
+                           :disabled="currentMarketStatus === false"
                            variant-class="danger"
                            text="NO"
                            @clicked="saveMarketStatus(placeData.item.id,false)"/>
