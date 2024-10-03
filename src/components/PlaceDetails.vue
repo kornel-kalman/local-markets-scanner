@@ -12,6 +12,8 @@ const props = defineProps({
 })
 
 const photosFolder = 'assets/_photos/' + props.placeData.item.id;
+// TODO Update scraper component to save property according to this logic.
+const MAX_NUMBER_OF_PHOTOS_PER_PLACE = 7;
 
 const reviewFields = [
   'rating',
@@ -82,7 +84,7 @@ const saveMarketStatus = function (id, marketStatus) {
         </b-row>
         <b-row>
           <b-collapse id="collapse-photos" v-model="phtosVisible" @show="reviewsVisible=false">
-            <template v-for="i in placeData.item.n_photos" :key="i">
+            <template v-for="i in Math.min(placeData.item.n_photos, MAX_NUMBER_OF_PHOTOS_PER_PLACE)" :key="i">
               <b-img :src="`${photosFolder}/${i-1}.jpg`" width="360" height="270"/>
             </template>
           </b-collapse>
