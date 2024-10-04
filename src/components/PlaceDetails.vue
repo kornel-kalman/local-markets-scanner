@@ -90,9 +90,9 @@ function saveMarketStatus(id, marketStatus) {
           <b-col cols="3">
             <b-card title="Type(s)" bg-variant="light">
               <b-card-text>
-                <template v-for="type in placeData.item.types" :key="type">
-                  <div v-text="`${type.replaceAll('_',' ')}`"/>
-                </template>
+                <div v-for="type in placeData.item.types" :key="type">
+                  {{ type.replaceAll('_', ' ') }}
+                </div>
               </b-card-text>
             </b-card>
           </b-col>
