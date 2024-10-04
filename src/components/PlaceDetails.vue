@@ -116,7 +116,7 @@ function saveMarketStatus(id, marketStatus, recordProcessed = true) {
           <b-collapse :id="collapseIdReviews" v-model="reviewsVisible" @show="photosVisible=false">
             <b-table
                 hover caption-top
-                caption="5 most relevant reviews"
+                :caption="`${Math.min(placeData.item.n_reviews, 5)}` + ' most relevant review(s)'"
                 :items="reviews"
                 :fields="reviewFields"
             />
