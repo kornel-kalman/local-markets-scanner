@@ -62,21 +62,23 @@ function togglePlaceDetails(item, index, event) {
   item._showDetails = newState;
 }
 
-function updatePlaceData(placeId, placeData) {
+function updatePlaceData(placeId, placeData, recordProcessed) {
   // Update place record
   let idx = places.value.findIndex((placeObj) => placeObj.id === placeId);
   for (let prop in placeData) {
     places.value[idx][prop] = placeData[prop];
   }
 
-  // Hide details of current record
-  idx = displayedPlaces.value.findIndex((placeObj) => placeObj.id === placeId);
-  displayedPlaces.value[idx]._showDetails = false;
-  // Show details of next displayed & unmarked record
-  for (let i = idx; i < displayedPlaces.value.length - 1; i++) {
-    if (displayedPlaces.value[i + 1].is_market === null) {
-      displayedPlaces.value[i + 1]._showDetails = true;
-      break;
+  if (recordProcessed) {
+    // Hide details of current record
+    idx = displayedPlaces.value.findIndex((placeObj) => placeObj.id === placeId);
+    displayedPlaces.value[idx]._showDetails = false;
+    // Show details of next displayed & unmarked record
+    for (let i = idx; i < displayedPlaces.value.length - 1; i++) {
+      if (displayedPlaces.value[i + 1].is_market === null) {
+        displayedPlaces.value[i + 1]._showDetails = true;
+        break;
+      }
     }
   }
 }
@@ -113,7 +115,10 @@ function updatePlaceData(placeId, placeData) {
       </template>
 
       <template #row-details="row">
-        <PlaceDetails :placeData="row" @place:update="(placeId, placeData)=>updatePlaceData(placeId, placeData)"/>
+        <PlaceDetails
+            :placeData="row"
+            @place:update="(placeId, placeData, recordProcessed)=>updatePlaceData(placeId, placeData, recordProcessed)"
+        />
       </template>
     </b-table>
   </div>
