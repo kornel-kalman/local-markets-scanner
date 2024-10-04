@@ -53,7 +53,7 @@ onBeforeMount(() => {
 })
 
 
-function saveMarketStatus(id, marketStatus) {
+function saveMarketStatus(id, marketStatus, recordProcessed = true) {
   axios
       .put('http://localhost:5000/places/' + id, {
         'is_market': marketStatus
@@ -61,7 +61,7 @@ function saveMarketStatus(id, marketStatus) {
       .then((response) => {
         let is_market = response.data?.is_market;
         currentMarketStatus.value = is_market;
-        emit('place:update', id, {'is_market': is_market})
+        emit('place:update', id, {'is_market': is_market}, recordProcessed)
       })
       .catch(console.error);
 }
@@ -139,6 +139,9 @@ function saveMarketStatus(id, marketStatus) {
                            variant-class="danger"
                            text="NO"
                            @clicked="saveMarketStatus(placeData.item.id, false)"/>
+          </div>
+          <div>
+            <a class="empty-link" v-text="'Clear status'" @click="saveMarketStatus(placeData.item.id, null, false)"/>
           </div>
         </div>
       </b-col>
