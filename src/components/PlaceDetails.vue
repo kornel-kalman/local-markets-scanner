@@ -24,7 +24,7 @@ const reviews = ref([])
 
 const currentMarketStatus = ref(props.placeData.item.is_market)
 
-const phtosVisible = ref(false)
+const photosVisible = ref(false)
 const reviewsVisible = ref(false)
 
 const cardStyleClass = computed(() => {
@@ -83,12 +83,12 @@ const saveMarketStatus = function (id, marketStatus) {
           </b-col>
         </b-row>
         <b-row>
-          <b-collapse id="collapse-photos" v-model="phtosVisible" @show="reviewsVisible=false">
+          <b-collapse id="collapse-photos" v-model="photosVisible" @show="reviewsVisible=false">
             <template v-for="i in Math.min(placeData.item.n_photos, MAX_NUMBER_OF_PHOTOS_PER_PLACE)" :key="i">
               <b-img :src="`${photosFolder}/${i-1}.jpg`" width="360" height="270"/>
             </template>
           </b-collapse>
-          <b-collapse id="collapse-reviews" v-model="reviewsVisible" @show="phtosVisible=false">
+          <b-collapse id="collapse-reviews" v-model="reviewsVisible" @show="photosVisible=false">
             <b-table
                 hover caption-top
                 caption="5 most relevant reviews"
