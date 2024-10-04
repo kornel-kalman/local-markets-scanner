@@ -9,9 +9,9 @@ const props = defineProps({
     type: Object,
     required: true
   }
-})
+});
 
-const emit = defineEmits(['place:update'])
+const emit = defineEmits(['place:update']);
 
 const photosFolder = 'assets/_photos/' + props.placeData.item.id;
 // TODO Update scraper component to save property according to this logic.
@@ -21,19 +21,22 @@ const reviewFields = [
   'rating',
   {key: 'relative_time_description', label: 'Time'},
   'text'
-]
-const reviews = ref([])
+];
+const reviews = ref([]);
 
-const currentMarketStatus = ref(props.placeData.item.is_market)
+const currentMarketStatus = ref(props.placeData.item.is_market);
 
-const photosVisible = ref(false)
-const reviewsVisible = ref(false)
+const photosVisible = ref(false);
+const reviewsVisible = ref(false);
+
+const collapseIdPhotos = 'collapse-photos-' + props.placeData.item.id;
+const collapseIdReviews = 'collapse-reviews-' + props.placeData.item.id;
 
 const cardStyleClass = computed(() => {
   if (currentMarketStatus.value === true) return 'card-market-yes';
   else if (currentMarketStatus.value === false) return 'card-market-no';
   return '';
-})
+});
 
 onBeforeMount(() => {
   let placeId = props.placeData.item.id;
@@ -83,21 +86,21 @@ function saveMarketStatus(id, marketStatus) {
         </b-row>
         <b-row align-h="center">
           <b-col cols="4">
-            <b-button v-b-toggle.collapse-photos class="m-1" v-if="placeData.item.n_photos > 0">
+            <b-button v-b-toggle="collapseIdPhotos" class="m-1" v-if="placeData.item.n_photos > 0">
               <span class="when-closed">Show</span><span class="when-open">Hide</span> photos
             </b-button>
-            <b-button v-b-toggle.collapse-reviews class="m-1" v-if="placeData.item.n_reviews > 0">
+            <b-button v-b-toggle="collapseIdReviews" class="m-1" v-if="placeData.item.n_reviews > 0">
               <span class="when-closed">Show</span><span class="when-open">Hide</span> reviews
             </b-button>
           </b-col>
         </b-row>
         <b-row>
-          <b-collapse id="collapse-photos" v-model="photosVisible" @show="reviewsVisible=false">
+          <b-collapse :id="collapseIdPhotos" v-model="photosVisible" @show="reviewsVisible=false">
             <template v-for="i in Math.min(placeData.item.n_photos, MAX_NUMBER_OF_PHOTOS_PER_PLACE)" :key="i">
               <b-img :src="`${photosFolder}/${i-1}.jpg`" width="360" height="270"/>
             </template>
           </b-collapse>
-          <b-collapse id="collapse-reviews" v-model="reviewsVisible" @show="photosVisible=false">
+          <b-collapse :id="collapseIdReviews" v-model="reviewsVisible" @show="photosVisible=false">
             <b-table
                 hover caption-top
                 caption="5 most relevant reviews"
