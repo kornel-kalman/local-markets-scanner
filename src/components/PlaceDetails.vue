@@ -1,7 +1,7 @@
 <script setup>
 /* eslint no-undef: off */
 import axios from "axios";
-import {computed, defineProps, onBeforeMount, ref} from "vue";
+import {computed, defineEmits, defineProps, onBeforeMount, ref} from "vue";
 import VariantButton from "@/components/elements/VariantButton.vue";
 
 const props = defineProps({
@@ -10,6 +10,8 @@ const props = defineProps({
     required: true
   }
 })
+
+const emit = defineEmits(['place:update'])
 
 const photosFolder = 'assets/_photos/' + props.placeData.item.id;
 // TODO Update scraper component to save property according to this logic.
@@ -34,8 +36,13 @@ const cardStyleClass = computed(() => {
 })
 
 onBeforeMount(() => {
+  let placeId = props.placeData.item.id;
+  if (!placeId) {
+    console.log('Place ID is missing, cannot load reviews.');
+    return;
+  }
   axios
-      .get('http://localhost:5000/places/' + props.placeData.item.id + '/reviews')
+      .get('http://localhost:5000/places/' + placeId + '/reviews')
       .then((response) => {
         reviews.value = response.data;
       })
@@ -43,13 +50,15 @@ onBeforeMount(() => {
 })
 
 
-const saveMarketStatus = function (id, marketStatus) {
+function saveMarketStatus(id, marketStatus) {
   axios
       .put('http://localhost:5000/places/' + id, {
         'is_market': marketStatus
       })
       .then((response) => {
-        currentMarketStatus.value = response.data?.is_market;
+        let is_market = response.data?.is_market;
+        currentMarketStatus.value = is_market;
+        emit('place:update', id, {'is_market': is_market})
       })
       .catch(console.error);
 }

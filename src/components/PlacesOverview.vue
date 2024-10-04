@@ -40,21 +40,29 @@ const currentPage = ref(1);
 
 const MAP_LINK_TEMPLATE = 'https://www.google.com/maps/place/?q=place_id:PLACE_ID'
 
-const getLink = (place_id) => MAP_LINK_TEMPLATE.replace('PLACE_ID', place_id)
+function getLink(place_id) {
+  return MAP_LINK_TEMPLATE.replace('PLACE_ID', place_id)
+}
 
-const rowClass = (item, type) => {
-  console.log(item.is_market);
+function rowClass(item, type) {
   if (!item || type !== 'row') return;
   else if (item.is_market === true) return 'table-success';
   else if (item.is_market === false) return 'table-danger';
   return '';
 }
 
-const showPlaceDetails = (item, index, event) => {
+function showPlaceDetails(item, index, event) {
   item._showDetails = !item._showDetails;
   event.preventDefault();
-
 }
+
+function updatePlaceData(placeId, placeData) {
+  let idx = places.value.findIndex((placeObj) => placeObj.id === placeId)
+  for (let prop in placeData) {
+    places.value[idx][prop] = placeData[prop]
+  }
+}
+
 </script>
 
 <template>
@@ -86,7 +94,7 @@ const showPlaceDetails = (item, index, event) => {
       </template>
 
       <template #row-details="row">
-        <PlaceDetails :placeData="row"/>
+        <PlaceDetails :placeData="row" @place:update="(placeId, placeData)=>updatePlaceData(placeId, placeData)"/>
       </template>
     </b-table>
   </div>
