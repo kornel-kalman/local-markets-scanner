@@ -73,16 +73,29 @@ function saveMarketStatus(id, marketStatus) {
     <b-row>
       <b-col sm="10">
         <b-row class="mb-2">
-          <b-col cols="3" class="text-sm-right"><b>Name:</b></b-col>
-          <b-col cols="6">{{ placeData.item.name }}</b-col>
+          <b-col cols="3">&nbsp;</b-col>
+          <b-col cols="6"><h4>{{ placeData.item.name }}</h4></b-col>
         </b-row>
-        <b-row class="mb-2">
-          <b-col cols="3" class="text-sm-right"><b>Business status:</b></b-col>
-          <b-col cols="6">{{ placeData.item.business_status }}</b-col>
-        </b-row>
-        <b-row class="mb-2">
-          <b-col cols="3" class="text-sm-right"><b>Rating:</b></b-col>
-          <b-col cols="6">{{ placeData.item.rating }} ({{ placeData.item.n_user_rating }})</b-col>
+        <b-row class="mb-2" align-h="center">
+          <b-col cols="3">
+            <b-card title="Business status" bg-variant="light">
+              <b-card-text>{{ placeData.item.business_status || '-' }}</b-card-text>
+            </b-card>
+          </b-col>
+          <b-col cols="3">
+            <b-card title="Rating" bg-variant="light">
+              <b-card-text>{{ placeData.item.rating || '-' }} ({{ placeData.item.n_user_rating }})</b-card-text>
+            </b-card>
+          </b-col>
+          <b-col cols="3">
+            <b-card title="Type(s)" bg-variant="light">
+              <b-card-text>
+                <template v-for="type in placeData.item.types" :key="type">
+                  <div v-text="`${type.replaceAll('_',' ')}`"/>
+                </template>
+              </b-card-text>
+            </b-card>
+          </b-col>
         </b-row>
         <b-row align-h="center">
           <b-col cols="4">
