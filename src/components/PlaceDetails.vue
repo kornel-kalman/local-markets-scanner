@@ -132,13 +132,13 @@ function saveMarketStatus(id, marketStatus) {
                            :disabled="currentMarketStatus === true"
                            variant-class="success"
                            text="YES"
-                           @clicked="saveMarketStatus(placeData.item.id,true)"/>
+                           @clicked="saveMarketStatus(placeData.item.id, true)"/>
             <VariantButton class="btn-market-no"
                            :selected="currentMarketStatus === false"
                            :disabled="currentMarketStatus === false"
                            variant-class="danger"
                            text="NO"
-                           @clicked="saveMarketStatus(placeData.item.id,false)"/>
+                           @clicked="saveMarketStatus(placeData.item.id, false)"/>
           </div>
         </div>
       </b-col>
@@ -167,5 +167,11 @@ img {
 div.fix-box {
   position: sticky;
   top: 20px;
+}
+
+a.empty-link {
+  color: black;
+  cursor: pointer;
+  text-decoration: none;
 }
 </style>
