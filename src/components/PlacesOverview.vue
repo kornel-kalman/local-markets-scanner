@@ -52,8 +52,13 @@ function rowClass(item, type) {
 }
 
 function showPlaceDetails(item, index, event) {
-  item._showDetails = !item._showDetails;
   event.preventDefault();
+  let newState = !item._showDetails;
+  for (const place of places.value)
+    if (place._showDetails)
+      place._showDetails = false;
+
+  item._showDetails = newState;
 }
 
 function updatePlaceData(placeId, placeData) {
