@@ -35,7 +35,8 @@ const fields = [
   {key: 'n_photos', sortable: true},
   {key: 'n_reviews', sortable: true},
   {key: 'name', sortable: true},
-  {key: 'rating', sortable: true}
+  {key: 'rating', sortable: true},
+  {key: 'is_market', sortable: true}
 ];
 
 // TODO Pagination does not affect table
