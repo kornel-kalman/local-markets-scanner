@@ -32,7 +32,8 @@ const fields = [
   {key: 'n_photos', sortable: true},
   {key: 'n_reviews', sortable: true},
   {key: 'name', sortable: true},
-  {key: 'rating', sortable: true}
+  {key: 'rating', sortable: true},
+  {key: 'is_market', sortable: true}
 ];
 
 const perPage = 20;
