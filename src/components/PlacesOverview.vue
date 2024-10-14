@@ -115,7 +115,7 @@ function doFilter(item, filterProp) {
   let filterText = (text !== null && text !== '');
   let filterType = (type !== null && type !== '');
 
-  let textMatch = filterText && item.name.includes(text);
+  let textMatch = filterText && item.name.toLowerCase().includes(text);
   let typeMatch = filterType && item.types.includes(type);
 
   return (!filterText || textMatch) && (!filterType || typeMatch);
