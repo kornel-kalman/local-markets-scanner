@@ -26,13 +26,15 @@ const totalRows = ref(0)
 const types = ref([])
 const typeFilter = ref(null)
 const textFilter = ref(null);
+let filterChanged = false;
 
 const filter = computed(() => {
+  filterChanged = true;
   if (textFilter.value === null && typeFilter.value === null) {
     return null;
   }
   return {'text': textFilter.value, 'type': typeFilter.value}
-})
+});
 
 onBeforeMount(() => {
   axios
@@ -122,6 +124,9 @@ function doFilter(item, filterProp) {
 }
 
 function onFiltered(filteredItems) {
+  if (!filterChanged)
+    return;
+  filterChanged = false;
   // Trigger pagination to update the number of buttons/pages due to filtering
   totalRows.value = filteredItems.length
   currentPage.value = 1
