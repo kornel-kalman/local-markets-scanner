@@ -45,7 +45,7 @@ onBeforeMount(() => {
     return;
   }
   axios
-      .get('http://localhost:5000/places/' + placeId + '/reviews')
+      .get(`${process.env.VUE_APP_BACKEND_URL}/places/${placeId}/reviews`)
       .then((response) => {
         reviews.value = response.data;
       })
@@ -55,7 +55,7 @@ onBeforeMount(() => {
 
 function saveMarketStatus(id, marketStatus, recordProcessed = true) {
   axios
-      .put('http://localhost:5000/places/' + id, {
+      .put(`${process.env.VUE_APP_BACKEND_URL}/places/${id}`, {
         'is_market': marketStatus
       })
       .then((response) => {
