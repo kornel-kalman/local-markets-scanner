@@ -1,4 +1,5 @@
 <script setup>
+
 import PlaceDetails from "@/components/PlaceDetails.vue";
 import axios from "axios";
 import {computed, onBeforeMount, ref} from "vue";
@@ -138,6 +139,11 @@ function onFiltered(filteredItems) {
   currentPage.value = 1
 }
 
+const get_link = (location) => {
+  return map_link_template
+      .replace('LAT', location[0])
+      .replace('LON', location[1])
+}
 </script>
 
 <template>
@@ -207,6 +213,7 @@ function onFiltered(filteredItems) {
         </template>
       </b-table>
     </b-container>
+
   </div>
 </template>
 
