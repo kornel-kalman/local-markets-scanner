@@ -138,12 +138,6 @@ function onFiltered(filteredItems) {
   totalRows.value = filteredItems.length
   currentPage.value = 1
 }
-
-const get_link = (location) => {
-  return map_link_template
-      .replace('LAT', location[0])
-      .replace('LON', location[1])
-}
 </script>
 
 <template>
