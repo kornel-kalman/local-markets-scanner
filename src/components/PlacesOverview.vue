@@ -3,11 +3,14 @@ import PlaceDetails from "@/components/PlaceDetails.vue";
 import axios from "axios";
 import {computed, onBeforeMount, ref} from "vue";
 
+console.log(process.env.VUE_APP_COUNTRY_NAME);
+
 const backend_url = process.env.VUE_APP_BACKEND_URL;
 const endpoint_places = backend_url + '/places'
 const endpoint_types = backend_url + '/places/types'
 
 /*** Table data ***/
+const tableTitle = 'Local markets in ' + process.env.VUE_APP_COUNTRY_NAME
 const places = ref([]);
 const displayedPlaces = ref([]);
 const dataAvailable = ref(false);
@@ -176,7 +179,7 @@ function onFiltered(filteredItems) {
                :items=places
                primary-key="id"
                outlined hover caption-top
-               caption="Local markets in Sri Lanka"
+               :caption="tableTitle"
                :striped=true
                :small=true
                :api-url="endpoint_places"
