@@ -3,6 +3,9 @@ import PlaceDetails from "@/components/PlaceDetails.vue";
 import axios from "axios";
 import {computed, onBeforeMount, ref} from "vue";
 
+const backend_url = process.env.VUE_APP_BACKEND_URL;
+const endpoint_places = backend_url + '/places'
+const endpoint_types = backend_url + '/places/types'
 
 /*** Table data ***/
 const places = ref([]);
@@ -38,7 +41,7 @@ const filter = computed(() => {
 
 onBeforeMount(() => {
   axios
-      .get('http://localhost:5000/places')
+      .get(endpoint_places)
       .then((response) => {
         let items = response.data;
         // Generate synthetic fields
@@ -52,7 +55,7 @@ onBeforeMount(() => {
       .catch(console.error);
 
   axios
-      .get('http://localhost:5000/places/types')
+      .get(endpoint_types)
       .then((response) => {
         for (const typeData of response.data) {
           types.value.push({
@@ -176,7 +179,7 @@ function onFiltered(filteredItems) {
                caption="Local markets in Sri Lanka"
                :striped=true
                :small=true
-               api-url="http://localhost:5000/places"
+               :api-url="endpoint_places"
                :per-page=perPage
                :current-page=currentPage
                :filter="filter"
