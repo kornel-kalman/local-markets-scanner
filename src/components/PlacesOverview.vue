@@ -45,7 +45,7 @@ onBeforeMount(() => {
   axios
       .get(endpoint_places)
       .then((response) => {
-        let items = response.data;
+        let items = eval(response.data);
         // Generate synthetic fields
         for (let idx in items) {
           items[idx]['_showDetails'] = false
