@@ -13,7 +13,13 @@ const props = defineProps({
 
 const emit = defineEmits(['place:update']);
 
-const photosFolder = 'assets/_photos/' + props.placeData.item.id;
+// TODO Localize
+const photosFolder = (process.env.NODE_ENV === 'production' ? 'https://storage.googleapis.com/local-markets-scanner-mw-photos/' : '') +
+    'assets/_photos/' +
+    props.placeData.item.id;
+
+console.log(photosFolder)
+
 // TODO Update scraper component to save property according to this logic.
 const MAX_NUMBER_OF_PHOTOS_PER_PLACE = 7;
 
