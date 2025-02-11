@@ -9,6 +9,6 @@ COPY . ./
 RUN npm install
 RUN npm install -g serve
 
-RUN npm run build
+RUN npm run build --country=MW
 
 CMD serve -s dist -l $PORT
