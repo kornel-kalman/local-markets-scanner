@@ -4,8 +4,6 @@ import PlaceDetails from "@/components/PlaceDetails.vue";
 import axios from "axios";
 import {computed, onBeforeMount, ref} from "vue";
 
-console.log(process.env.VUE_APP_COUNTRY_NAME);
-
 const backend_url = process.env.VUE_APP_BACKEND_URL;
 const endpoint_places = backend_url + '/places'
 const endpoint_types = backend_url + '/places/types'
