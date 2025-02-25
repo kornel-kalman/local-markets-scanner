@@ -69,7 +69,37 @@ function saveMarketStatus(id, version, marketStatus, recordProcessed = true) {
         currentMarketStatus.value = is_market;
         emit('place:update', id, {'is_market': is_market, 'version': response.data.version}, recordProcessed)
       })
-      .catch(console.error);
+      .catch((error) => {
+        const status = error.response?.status;
+        const errorMessage = error.response?.data?.description || "An unknown error occurred.";
+
+        switch (status) {
+          case 400:
+            console.error("Bad Request:", errorMessage);
+            alert("Invalid request data. Please review your input.");
+            break;
+
+          case 404:
+            console.error("Place Not Found:", errorMessage);
+            alert("The requested place does not exist. Please refresh your data.");
+            break;
+
+          case 409:
+            console.warn("Version Conflict:", errorMessage);
+            alert("Version conflict detected! Please reload the data and try again.");
+            break;
+
+          case 500:
+            console.error("Server Error:", errorMessage);
+            alert("A server error occurred. Please try again later.");
+            break;
+
+          default:
+            console.error("Request Failed:", errorMessage);
+            alert("An error occurred while updating the place. Please try again.");
+            break;
+        }
+      });
 }
 
 </script>
