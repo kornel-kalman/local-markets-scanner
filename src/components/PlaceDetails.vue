@@ -76,7 +76,7 @@ function saveMarketStatus(id, version, marketStatus, recordProcessed = true) {
         switch (status) {
           case 400:
             console.error("Bad Request:", errorMessage);
-            alert("Invalid request data. Please review your input.");
+            alert("Invalid request data. Please try again.");
             break;
 
           case 404:
@@ -86,7 +86,7 @@ function saveMarketStatus(id, version, marketStatus, recordProcessed = true) {
 
           case 409:
             console.warn("Version Conflict:", errorMessage);
-            alert("Version conflict detected! Please reload the data and try again.");
+            alert("The record you are trying to modify has been changed. Please refresh the page.");
             break;
 
           case 500:
