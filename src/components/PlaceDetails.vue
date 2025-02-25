@@ -18,7 +18,6 @@ const photosFolder = (process.env.NODE_ENV === 'production' ? 'https://storage.g
     'assets/_photos/' +
     props.placeData.item.id;
 
-console.log(photosFolder)
 
 // TODO Update scraper component to save property according to this logic.
 const MAX_NUMBER_OF_PHOTOS_PER_PLACE = 7;
@@ -59,15 +58,16 @@ onBeforeMount(() => {
 })
 
 
-function saveMarketStatus(id, marketStatus, recordProcessed = true) {
+function saveMarketStatus(id, version, marketStatus, recordProcessed = true) {
   axios
       .put(`${process.env.VUE_APP_BACKEND_URL}/places/${id}`, {
-        'is_market': marketStatus
+        'is_market': marketStatus,
+        'version': version
       })
       .then((response) => {
         let is_market = response.data?.is_market;
         currentMarketStatus.value = is_market;
-        emit('place:update', id, {'is_market': is_market}, recordProcessed)
+        emit('place:update', id, {'is_market': is_market, 'version': response.data.version}, recordProcessed)
       })
       .catch(console.error);
 }
@@ -138,16 +138,17 @@ function saveMarketStatus(id, marketStatus, recordProcessed = true) {
                            :disabled="currentMarketStatus === true"
                            variant-class="success"
                            text="YES"
-                           @clicked="saveMarketStatus(placeData.item.id, true)"/>
+                           @clicked="saveMarketStatus(placeData.item.id, placeData.item.version, true)"/>
             <VariantButton class="btn-market-no"
                            :selected="currentMarketStatus === false"
                            :disabled="currentMarketStatus === false"
                            variant-class="danger"
                            text="NO"
-                           @clicked="saveMarketStatus(placeData.item.id, false)"/>
+                           @clicked="saveMarketStatus(placeData.item.id, placeData.item.version, false)"/>
           </div>
           <div>
-            <a class="empty-link" v-text="'Clear status'" @click="saveMarketStatus(placeData.item.id, null, false)"/>
+            <a class="empty-link" v-text="'Clear status'"
+               @click="saveMarketStatus(placeData.item.id, placeData.item.version, null, false)"/>
           </div>
         </div>
       </b-col>
